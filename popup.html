@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gold Pulse</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="container">
+    <section class="price-card">
+      <div class="title">قیمت ۱ گرم طلای ۱۸ عیار</div>
+      <div id="price" class="price">---</div>
+      <div id="updated" class="updated"></div>
+      <div id="error" class="error"></div>
+      <button id="refresh" type="button">به‌روزرسانی</button>
+    </section>
+
+    <details id="settingsPanel" class="settings" open>
+      <summary>تنظیمات</summary>
+      <div class="settings-content">
+
+      <label class="switch-row">
+        <span>نمایش قیمت روی Badge</span>
+        <input id="showBadge" type="checkbox">
+      </label>
+
+      <label>
+        <span>به‌روزرسانی خودکار</span>
+        <select id="refreshInterval">
+          <option value="off">خاموش</option>
+          <option value="30">هر 30 ثانیه</option>
+          <option value="60">هر 1 دقیقه</option>
+          <option value="300">هر 5 دقیقه</option>
+          <option value="600">هر 10 دقیقه</option>
+          <option value="1800">هر 30 دقیقه</option>
+        </select>
+      </label>
+
+      <div class="thresholds">
+        <label>
+          <span>حداقل قیمت (تومان)</span>
+          <input id="minPrice" type="number" min="0" step="1000" placeholder="مثلاً 23000000">
+        </label>
+
+        <label>
+          <span>حداکثر قیمت (تومان)</span>
+          <input id="maxPrice" type="number" min="0" step="1000" placeholder="مثلاً 23500000">
+        </label>
+      </div>
+
+      <label>
+        <span>نوع هشدار</span>
+        <select id="alertType">
+          <option value="badge">قرمز شدن Badge عددی</option>
+          <option value="notification">Notification ویندوز</option>
+          <option value="both">هر دو</option>
+        </select>
+      </label>
+
+      <button id="save" class="save" type="button">ذخیره تنظیمات</button>
+      </div>
+    </details>
+
+    <section class="developer-links">
+      <button
+        id="developerLinksToggle"
+        class="help-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="developerLinksPanel"
+        aria-label="نمایش لینک‌های توسعه‌دهنده"
+        title="لینک‌های توسعه‌دهنده"
+      >؟</button>
+
+      <div id="developerLinksPanel" class="developer-links-panel" hidden>
+        <a
+          href="https://github.com/amirbaha2ri"
+          target="_blank"
+          rel="noopener noreferrer"
+        >GitHub</a>
+        <a
+          href="https://www.linkedin.com/in/amirbaha2ri"
+          target="_blank"
+          rel="noopener noreferrer"
+        >LinkedIn</a>
+      </div>
+    </section>
+
+    <div id="saveStatus" class="save-status" role="status" aria-live="polite"></div>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
