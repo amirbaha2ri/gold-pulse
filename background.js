@@ -1,5 +1,6 @@
-const ALARM_NAME = "milli-price-refresh";
-const PRICE_URL = "https://milli.gold/";
+const ALARM_NAME = "gold-pulse-price-refresh";
+const LEGACY_ALARM_NAME = "milli-price-refresh";
+const PRICE_URL = "https://www.tgju.org/profile/geram18";
 const NORMAL_BADGE_COLOR = "#17324d";
 const ALERT_BADGE_COLOR = "#D32F2F";
 
@@ -18,12 +19,12 @@ function normalizePrice(text) {
       String(digit.charCodeAt(0) - 0x06F0))
     .replace(/[\u0660-\u0669]/g, digit =>
       String(digit.charCodeAt(0) - 0x0660))
-    .replace(/\s+/g, "");
-  const match = normalized.match(/([\d,٬]+)ریال/);
-  if (!match) return null;
+    .replace(/[\s,٬]/g, "");
 
-  const numeric = Number(match[1].replace(/[,٬]/g, ""));
-  return Number.isFinite(numeric) ? numeric : null;
+  if (!/^\d+$/.test(normalized)) return null;
+
+  const numeric = Number(normalized);
+  return Number.isFinite(numeric) && numeric > 0 ? numeric : null;
 }
 
 function htmlToText(html) {
@@ -54,19 +55,20 @@ async function fetchPrice() {
   }
 
   const html = await response.text();
+  const priceElement = html.match(
+    /<span\b(?=[^>]*\bdata-col\s*=\s*["']info\.last_trade\.PDrCotVal["'])[^>]*>([\s\S]*?)<\/span>/i
+  );
 
-  // Manifest V3 background scripts are service workers, where DOMParser is not
-  // available. Parse paragraph contents without relying on DOM-only APIs.
-  for (const match of html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)) {
-    const price = normalizePrice(htmlToText(match[1]));
-    if (price !== null) return price;
+  if (!priceElement) {
+    throw new Error("TGJU price element not found.");
   }
 
-  // Fallback for future markup changes where the price is no longer inside <p>.
-  const price = normalizePrice(htmlToText(html));
-  if (price !== null) return price;
+  const price = normalizePrice(htmlToText(priceElement[1]));
+  if (price === null) {
+    throw new Error("TGJU price value is invalid.");
+  }
 
-  throw new Error("Price not found.");
+  return price;
 }
 
 function formatPrice(price) {
@@ -121,7 +123,7 @@ async function triggerAlert(price, reason, settings) {
     : "قیمت طلا به حداکثر رسید";
 
   if (shouldNotify) {
-    const notificationId = `milli-price-${Date.now()}`;
+    const notificationId = `gold-pulse-price-${Date.now()}`;
 
     await chrome.notifications.create(notificationId, {
       type: "basic",
@@ -191,7 +193,7 @@ async function updatePrice() {
     await checkAlert(price, settings);
     return price;
   } catch (error) {
-    console.error("Milli price update failed:", error);
+    console.error("TGJU price update failed:", error);
     await chrome.storage.local.set({
       lastError: error.message || "Unknown error"
     });
@@ -204,6 +206,7 @@ async function configureAlarm() {
     await chrome.storage.local.get("refreshInterval");
 
   await chrome.alarms.clear(ALARM_NAME);
+  await chrome.alarms.clear(LEGACY_ALARM_NAME);
 
   const minutes = REFRESH_OPTIONS[refreshInterval];
   if (minutes) {

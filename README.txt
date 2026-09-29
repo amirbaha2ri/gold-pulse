@@ -1,8 +1,8 @@
-Milli Gold Price - Chrome Extension
-Version 2.3.0
+Gold Pulse - Chrome Extension
+Version 2.4.0
 
 Features:
-- Reads the 1 gram 18K gold price from milli.gold without opening the website.
+- Reads the 1 gram 18K gold price from tgju.org without opening the website.
 - Displays and stores prices in toman (the source website reports rial).
 - Optional price display on the extension badge.
 - Automatic refresh:
@@ -24,6 +24,5 @@ Installation:
 4. Click Load unpacked.
 5. Select this extracted folder.
 
-Note about the icon:
-The official Milli favicon could not be fetched reliably during package creation,
-so this package includes a small fallback Milli-style "M" icon.
+Data source:
+https://www.tgju.org/profile/geram18

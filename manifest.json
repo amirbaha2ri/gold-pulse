@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Gold Pulse",
-  "version": "2.3.2",
-  "description": "نمایش و پایش قیمت ۱ گرم طلای ۱۸ عیار از سایت میلی",
+  "version": "2.4.0",
+  "description": "نمایش و پایش قیمت ۱ گرم طلای ۱۸ عیار از TGJU",
   "permissions": [
     "alarms",
     "notifications",
     "storage"
   ],
   "host_permissions": [
-    "https://milli.gold/*"
+    "https://www.tgju.org/*"
   ],
   "action": {
     "default_title": "Gold Pulse - قیمت طلا",
