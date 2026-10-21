@@ -1,6 +1,9 @@
 const ALARM_NAME = "gold-pulse-price-refresh";
 const LEGACY_ALARM_NAME = "milli-price-refresh";
-const PRICE_URL = "https://www.tgju.org/profile/geram18";
+const PRICE_URLS = {
+  karat18: "https://www.tgju.org/profile/geram18",
+  karat24: "https://www.tgju.org/profile/geram24"
+};
 const NORMAL_BADGE_COLOR = "#17324d";
 const ALERT_BADGE_COLOR = "#D32F2F";
 
@@ -44,14 +47,14 @@ function htmlToText(html) {
     .replace(/&gt;/gi, ">");
 }
 
-async function fetchPrice() {
-  const response = await fetch(PRICE_URL, {
+async function fetchPrice(url) {
+  const response = await fetch(url, {
     method: "GET",
     cache: "no-store"
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+    throw new Error(`HTTP ${response.status} for ${url}`);
   }
 
   const html = await response.text();
@@ -174,8 +177,12 @@ async function checkAlert(price, settings) {
 
 async function updatePrice() {
   try {
-    const priceInRials = await fetchPrice();
+    const [priceInRials, price24InRials] = await Promise.all([
+      fetchPrice(PRICE_URLS.karat18),
+      fetchPrice(PRICE_URLS.karat24)
+    ]);
     const price = Math.trunc(priceInRials / 10);
+    const price24 = Math.trunc(price24InRials / 10);
     const settings = await chrome.storage.local.get([
       "minPrice",
       "maxPrice",
@@ -185,6 +192,7 @@ async function updatePrice() {
 
     await chrome.storage.local.set({
       price,
+      price24,
       priceUnit: "toman",
       priceUpdatedAt: Date.now(),
       lastError: ""

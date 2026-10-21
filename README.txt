@@ -1,8 +1,9 @@
 Gold Pulse - Chrome Extension
-Version 2.4.0
+Version 2.5.1
 
 Features:
-- Reads the 1 gram 18K gold price from tgju.org without opening the website.
+- Displays 18K and 24K gold prices from tgju.org without opening the website.
+- Keeps the badge, thresholds, and notifications based on the 18K price.
 - Displays and stores prices in toman (the source website reports rial).
 - Optional price display on the extension badge.
 - Automatic refresh:
@@ -26,3 +27,4 @@ Installation:
 
 Data source:
 https://www.tgju.org/profile/geram18
+https://www.tgju.org/profile/geram24
