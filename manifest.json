@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Gold Pulse",
-  "version": "2.4.0",
-  "description": "نمایش و پایش قیمت ۱ گرم طلای ۱۸ عیار از TGJU",
+  "version": "2.5.1",
+  "description": "نمایش قیمت طلای ۱۸ و ۲۴ عیار و پایش طلای ۱۸ عیار از TGJU",
   "permissions": [
     "alarms",
     "notifications",

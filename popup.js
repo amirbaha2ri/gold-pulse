@@ -1,4 +1,5 @@
 const priceEl = document.getElementById("price");
+const price24El = document.getElementById("price24");
 const updatedEl = document.getElementById("updated");
 const errorEl = document.getElementById("error");
 
@@ -19,19 +20,39 @@ function formatPrice(value) {
   return new Intl.NumberFormat("en-US").format(value);
 }
 
+function formatUpdatedAt(timestamp) {
+  const date = new Date(timestamp);
+  const shortPersianDate = new Intl.DateTimeFormat(
+    "fa-IR-u-ca-persian-nu-latn",
+    { year: "2-digit", month: "2-digit", day: "2-digit" }
+  ).format(date);
+  const time = new Intl.DateTimeFormat(
+    "fa-IR-u-nu-latn",
+    { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }
+  ).format(date);
+
+  return `${shortPersianDate} - ${time}`;
+}
+
 function renderPrice(data) {
   if (Number.isFinite(data.price)) {
     priceEl.textContent = `${formatPrice(data.price)} تومان`;
   }
 
-  if (data.priceUpdatedAt) {
-    updatedEl.textContent =
-      `آخرین دریافت: ${new Date(data.priceUpdatedAt).toLocaleTimeString("fa-IR")}`;
+  if (Number.isFinite(data.price24)) {
+    price24El.textContent = `${formatPrice(data.price24)} تومان`;
   }
 
-  errorEl.textContent = data.lastError
-    ? "دریافت آخرین قیمت با خطا مواجه شد."
-    : "";
+  if (data.priceUpdatedAt) {
+    updatedEl.textContent =
+      `آخرین آپدیت: ${formatUpdatedAt(data.priceUpdatedAt)}`;
+  }
+
+  if (Object.hasOwn(data, "lastError")) {
+    errorEl.textContent = data.lastError
+      ? "دریافت آخرین قیمت با خطا مواجه شد."
+      : "";
+  }
 }
 
 function showSaveStatus(message, type) {
@@ -49,6 +70,7 @@ function showSaveStatus(message, type) {
 async function load() {
   const data = await chrome.storage.local.get([
     "price",
+    "price24",
     "priceUpdatedAt",
     "priceUnit",
     "lastError",
@@ -73,6 +95,7 @@ async function load() {
 async function refresh() {
   errorEl.textContent = "";
   priceEl.textContent = "در حال دریافت...";
+  price24El.textContent = "در حال دریافت...";
 
   const response = await chrome.runtime.sendMessage({ type: "refresh" });
 
@@ -142,7 +165,7 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   const priceData = {};
   let shouldRender = false;
 
-  for (const key of ["price", "priceUpdatedAt", "lastError"]) {
+  for (const key of ["price", "price24", "priceUpdatedAt", "lastError"]) {
     if (changes[key]) {
       priceData[key] = changes[key].newValue;
       shouldRender = true;

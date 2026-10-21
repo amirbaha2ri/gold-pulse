@@ -9,16 +9,26 @@
 <body>
   <main class="container">
     <section class="price-card">
-      <div class="title">قیمت ۱ گرم طلای ۱۸ عیار</div>
-      <div id="price" class="price">---</div>
+      <div class="price-block">
+        <div class="title">قیمت ۱ گرم طلای ۱۸ عیار</div>
+        <div id="price" class="price">---</div>
+      </div>
+
+      <div class="price-block price-block-secondary">
+        <div class="title">قیمت ۱ گرم طلای ۲۴ عیار</div>
+        <div id="price24" class="price price-secondary">---</div>
+      </div>
+
       <div id="updated" class="updated"></div>
       <div id="error" class="error"></div>
       <button id="refresh" type="button">به‌روزرسانی</button>
     </section>
 
-    <details id="settingsPanel" class="settings" open>
+    <details id="settingsPanel" class="settings">
       <summary>تنظیمات</summary>
       <div class="settings-content">
+
+      <p class="settings-note">Badge و هشدارها فقط براساس قیمت طلای ۱۸ عیار هستند.</p>
 
       <label class="switch-row">
         <span>نمایش قیمت روی Badge</span>
